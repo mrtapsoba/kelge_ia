@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kelge_ia/views/auth_page.dart';
 import 'package:kelge_ia/views/home_page.dart';
 
 class LandingPage extends StatefulWidget {
@@ -51,13 +52,13 @@ class _LandingPageState extends State<LandingPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const HomePage();
+                        return const AuthPage();
                       },
                     ),
                   );
                 },
                 child: Text(
-                  "Se connecter avec Google",
+                  "Commencer",
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
