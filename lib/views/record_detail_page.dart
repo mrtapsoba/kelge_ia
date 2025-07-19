@@ -12,6 +12,9 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
   final GlobalKey _progressKey = GlobalKey();
   bool _showAppBarControls = false;
 
+  // ✅ Ajouter un booléen pour le mode sélectionné
+  bool isPreviewMode = true;
+
   @override
   void initState() {
     super.initState();
@@ -65,6 +68,119 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
     );
   }
 
+  Widget _buildSwitcher() {
+    return Container(
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: Colors.green[50],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isPreviewMode = true;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: isPreviewMode ? Colors.white : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text("Aperçu rapide", style: TextStyle(fontSize: 20)),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isPreviewMode = false;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: !isPreviewMode ? Colors.white : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text("Transcription", style: TextStyle(fontSize: 20)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    if (isPreviewMode) {
+      return Container(
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Mots clés",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 4.0,
+              children: [
+                Chip(label: Text("Climat"), shape: StadiumBorder()),
+                Chip(label: Text("Environnement"), shape: StadiumBorder()),
+                Chip(
+                  label: Text("Développement durable"),
+                  shape: StadiumBorder(),
+                ),
+                Chip(label: Text("Énergie"), shape: StadiumBorder()),
+                Chip(label: Text("Technologie"), shape: StadiumBorder()),
+              ],
+            ),
+            Text(
+              "Résumé",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Transcription",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Lorem Ipsum is simply dummy text of the printing and typesetting industry..."
+              "\n\nMore text here...",
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +208,7 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
-              key: _progressKey, // <-- Attach the key here
+              key: _progressKey,
               children: [
                 LinearProgressIndicator(
                   minHeight: 7,
@@ -106,68 +222,9 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
             ),
           ),
           SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              color: Colors.green[50],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text("Aperçu rapide", style: TextStyle(fontSize: 20)),
-                ),
-                Text("Transcription", style: TextStyle(fontSize: 20)),
-              ],
-            ),
-          ),
+          _buildSwitcher(), // ✅ bouton de switch
           SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Mots clés",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 4.0,
-                  children: [
-                    Chip(label: Text("Climat"), shape: StadiumBorder()),
-                    Chip(label: Text("Environnement"), shape: StadiumBorder()),
-                    Chip(
-                      label: Text("Développement durable"),
-                      shape: StadiumBorder(),
-                    ),
-                    Chip(label: Text("Énergie"), shape: StadiumBorder()),
-                    Chip(label: Text("Technologie"), shape: StadiumBorder()),
-                  ],
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Résumé",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ),
+          _buildContent(), // ✅ contenu selon sélection
         ],
       ),
     );
