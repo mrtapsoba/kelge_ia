@@ -8,18 +8,76 @@ class RecordDetailPage extends StatefulWidget {
 }
 
 class _RecordDetailPageState extends State<RecordDetailPage> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _progressKey = GlobalKey();
+  bool _showAppBarControls = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_checkProgressVisibility);
+  }
+
+  void _checkProgressVisibility() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderObject? renderBox =
+          _progressKey.currentContext?.findRenderObject();
+      if (renderBox is RenderBox) {
+        final position = renderBox.localToGlobal(Offset.zero);
+        final isVisible = position.dy > kToolbarHeight;
+        if (_showAppBarControls == isVisible) {
+          setState(() {
+            _showAppBarControls = !isVisible;
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildControlsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.delete_forever, color: Colors.red),
+        ),
+        Text("12:42 / 35:02"),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.history, color: Colors.green[800]),
+        ),
+        IconButton.filledTonal(
+          onPressed: () {},
+          icon: Icon(Icons.play_arrow, color: Colors.green[800]),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.arrow_forward, color: Colors.green[800]),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton.filledTonal(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
           icon: Icon(Icons.arrow_back, color: Colors.green[800]),
         ),
+        title: _showAppBarControls ? _buildControlsRow() : null,
+        toolbarHeight: _showAppBarControls ? 80 : kToolbarHeight,
       ),
       body: ListView(
+        controller: _scrollController,
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
         children: [
           const Text(
@@ -34,6 +92,7 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
+              key: _progressKey, // <-- Attach the key here
               children: [
                 LinearProgressIndicator(
                   minHeight: 7,
@@ -42,28 +101,7 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
                   color: Colors.green[800],
                 ),
                 SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.delete_forever, color: Colors.red),
-                    ),
-                    Text("12:42 / 35:02"),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.history, color: Colors.green[800]),
-                    ),
-                    IconButton.filledTonal(
-                      onPressed: () {},
-                      icon: Icon(Icons.play_arrow, color: Colors.green[800]),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.arrow_forward, color: Colors.green[800]),
-                    ),
-                  ],
-                ),
+                _buildControlsRow(),
               ],
             ),
           ),
@@ -124,7 +162,7 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
