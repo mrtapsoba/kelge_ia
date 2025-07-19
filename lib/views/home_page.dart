@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kelge_ia/views/record_detail_page.dart';
 import 'package:kelge_ia/views/recording_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -94,6 +95,13 @@ class _HomePageState extends State<HomePage> {
                         Badge(smallSize: 10),
                       ],
                     ),
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RecordDetailPage(),
+                          ),
+                        ),
                   );
                 },
               ),
